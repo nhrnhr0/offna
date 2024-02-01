@@ -10,6 +10,7 @@ import { createEventDispatcher } from "svelte";
 import TableSideFilters from "./TableSideFilters.svelte";
 import { browser } from "$app/environment";
 import OrderingOptions from "./OrderingOptions.svelte";
+import MultiSelectField from "../fields/MultiSelectField.svelte";
 
 /**
  * @type {any[]}
@@ -38,21 +39,6 @@ function filter_updated() {
 function order_updated() {
   dispatch("order_updated");
 }
-function calc_table_height() {
-  // get the height of the table header
-  if (!browser) return "100vh";
-  debugger;
-  let header_height = document.querySelector(".my-table thead")?.offsetHeight || 0;
-  // get the Y position of the table
-  let table_y = document.querySelector(".my-table")?.getBoundingClientRect()?.y || 0;
-
-  let table_header_height = document.querySelector(".my-table thead")?.offsetHeight || 0;
-
-  let total_offset = table_header_height + table_y + 30;
-  let res = `calc(100vh - ${total_offset}px)`;
-  console.log(res);
-  return res;
-}
 </script>
 
 <div class="data-table">
@@ -62,7 +48,7 @@ function calc_table_height() {
     <!-- ordering  options -->
     <OrderingOptions on:order_updated={order_updated}></OrderingOptions>
     <div class="panel">
-      <table class="table table-striped table-hover my-table" style="--table-height: {calc_table_height()}">
+      <table class="table table-striped table-hover my-table">
         {#if fields_options === undefined}
           <thead>
             <tr>
@@ -98,6 +84,8 @@ function calc_table_height() {
                       <TextField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></TextField>
                     {:else if field.type === "select"}
                       <SelectField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></SelectField>
+                    {:else if field.type === "multi_select"}
+                      <MultiSelectField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></MultiSelectField>
                     {:else}
                       <td>-</td>
                     {/if}
@@ -116,6 +104,10 @@ function calc_table_height() {
 
 <style lang="scss">
 .data-table {
+  height: 100vh;
+  overflow-y: auto;
+  border: 1px solid black;
+  // border: 1px solid black;
   .panel {
     display: grid;
     grid-template-columns: 8fr 2fr;
@@ -123,20 +115,7 @@ function calc_table_height() {
   }
   .my-table {
     table-layout: fixed;
-    // border: 1px solid blue;
-    // max-height: 50vh;
     width: 100%;
-    tbody {
-      display: block;
-      height: var(--table-height);
-      overflow: auto;
-    }
-    thead,
-    tbody tr {
-      display: table;
-      width: 100%;
-      table-layout: fixed;
-    }
     :global(td),
     :global(th) {
       text-align: center;

@@ -6,6 +6,7 @@ export let links = [
   { name: "Categories", link: "/dashboard/categories", icon: "fas fa-list" },
   { name: "Orders", link: "/dashboard/orders", icon: "fas fa-shopping-cart" },
   { name: "מידות", link: "/dashboard/sizes", icon: "fas fa-ruler-combined" },
+  { name: "קבוצות מידות", link: "/dashboard/size_groups", icon: "fas fa-ruler-combined" },
   { name: "Colors", link: "/dashboard/colors", icon: "fas fa-palette" },
 ];
 </script>

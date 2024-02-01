@@ -62,9 +62,13 @@ class detail_sizes_api(APIView):
 
 
 class sizes_groups_api(APIView):
+    filters_fields = [
+                        {'db_key': 'name', 'url_key':'name','lookups':['icontains', '']},
+    ]
     def get(self, request):
-        sizes = ProductSizeGroup.objects.all()
-        serializer = ProductSizeGroupSerializer(sizes, many=True)
+        sizes_group = ProductSizeGroup.objects.all()
+        qs = apply_filters(request, sizes_group, self.filters_fields)
+        serializer = ProductSizeGroupSerializer(qs, many=True)
         return Response(serializer.data)
     def post(self, request):
         serializer = ProductSizeGroupSerializer(data=request.data)
@@ -72,3 +76,22 @@ class sizes_groups_api(APIView):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors)
+    
+
+class detail_sizes_groups_api(APIView):
+    def get(self, request, pk):
+        sizes_group = ProductSizeGroup.objects.get(pk=pk)
+        serializer = ProductSizeGroupSerializer(sizes_group)
+        return Response(serializer.data)
+    def put(self, request, pk):
+        sizes_group = ProductSizeGroup.objects.get(pk=pk)
+        serializer = ProductSizeGroupSerializer(sizes_group, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            # return 200 ok
+            return Response(status=200)
+        return Response(serializer.errors)
+    def delete(self, request, pk):
+        sizes_group = ProductSizeGroup.objects.get(pk=pk)
+        sizes_group.delete()
+        return Response(status=204)

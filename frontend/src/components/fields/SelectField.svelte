@@ -48,8 +48,8 @@ function handle_abort(e) {
           <button class="btn btn-success" on:click={handle_save}>✓</button>
           <button class="btn btn-danger" on:click={handle_abort}>✗</button>
         </div>
-      {:else}
-        {field_options.options.find((option) => option.id === record[key]).name}
+      {:else if field_options && field_options.options && field_options.options.length > 0}
+        {field_options.options.find((option) => option.id === record[key])?.name ?? "ריק"}
       {/if}
     </div>
   {:else}

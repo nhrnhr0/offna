@@ -18,15 +18,16 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from resourses.api import sizes_api,sizes_groups_api,detail_sizes_api
+from resourses.api import sizes_api,sizes_groups_api,detail_sizes_api,detail_sizes_groups_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     
     path('api/sizes/', sizes_api.as_view()),
-    path( 'api/sizes/<int:pk>/', detail_sizes_api.as_view()),
+    path('api/sizes/<int:pk>/', detail_sizes_api.as_view()),
     path('api/sizes_groups/', sizes_groups_api.as_view()),
+    path('api/sizes_groups/<int:pk>/', detail_sizes_groups_api.as_view()),
 ]
 
 

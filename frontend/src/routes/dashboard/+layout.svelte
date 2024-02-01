@@ -15,8 +15,6 @@ import DashBoardNav from "../../components/DashboardNav.svelte";
   height: 100%;
   .dashboard-content {
     flex: 1;
-    padding: 10px;
-
     display: flex;
     flex-direction: column;
     align-items: center;
