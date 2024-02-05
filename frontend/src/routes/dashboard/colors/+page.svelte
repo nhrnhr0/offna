@@ -1,6 +1,6 @@
 <script>
 import { onMount } from "svelte";
-import { SizesDataFetcher, SizesGroupsDataFetcher, OptionsDataStore } from "../../../network/DataFetcher";
+import { ColorsDataFetcher } from "../../../network/DataFetcher";
 import DataTable from "../../../components/table_panels/DataTable.svelte";
 import { page } from "$app/stores";
 import * as Types from "./../../../lib/types.js";
@@ -8,7 +8,7 @@ import * as Types from "./../../../lib/types.js";
 // import { layoutPrefereces } from "../../stores/layoutPrefereces";
 
 /**
- * @type {SizesDataFetcher}
+ * @type {ColorsDataFetcher}
  */
 let dataFetcher;
 
@@ -24,11 +24,6 @@ let size_group_options;
  */
 let fields_options;
 onMount(async () => {
-  let size_group_option_fetcher = new OptionsDataStore();
-  size_group_option_fetcher.set_fetcher(new SizesGroupsDataFetcher());
-  await size_group_option_fetcher.load_options();
-  size_group_options = size_group_option_fetcher.get_options();
-  console.log("size_group_options", size_group_options);
   fields_options = [
     {
       key: "id",
@@ -36,12 +31,17 @@ onMount(async () => {
       editable: false,
       label: "מזהה",
     },
-
     {
-      key: "size",
+      key: "name",
       type: "text",
       editable: true,
       label: "שם",
+    },
+    {
+      key: "color",
+      type: "color",
+      editable: true,
+      label: "צבע",
     },
     {
       key: "order",
@@ -49,15 +49,8 @@ onMount(async () => {
       editable: true,
       label: "סדר",
     },
-    {
-      key: "size_group",
-      type: "select",
-      editable: true,
-      label: "קבוצה",
-      options: size_group_options,
-    },
   ];
-  dataFetcher = new SizesDataFetcher();
+  dataFetcher = new ColorsDataFetcher();
   await get_data();
 });
 
@@ -78,16 +71,9 @@ function handle_cell_updated(event) {
 <DataTable
   on:cell_updated={handle_cell_updated}
   on:filter_updated={get_data}
-  title="מידות"
+  title="צבעים"
   {data}
   side_filters={[
-    {
-      query_param_key: "group",
-      type: "multiselect",
-      // options_fetcher: size_group_option_fetcher,
-      options: size_group_options,
-      label: "קבוצה",
-    },
     {
       query_param_key: "name",
       type: "text",

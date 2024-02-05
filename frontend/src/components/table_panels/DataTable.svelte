@@ -9,9 +9,8 @@ import SelectField from "../fields/SelectField.svelte";
 import { createEventDispatcher } from "svelte";
 import TableSideFilters from "./TableSideFilters.svelte";
 import { browser } from "$app/environment";
-import OrderingOptions from "./OrderingOptions.svelte";
 import MultiSelectField from "../fields/MultiSelectField.svelte";
-
+import ColorField from "../fields/ColorField.svelte";
 /**
  * @type {any[]}
  */
@@ -46,7 +45,6 @@ function order_updated() {
   <div class="">
     <h2 class="title">{title}</h2>
     <!-- ordering  options -->
-    <OrderingOptions on:order_updated={order_updated}></OrderingOptions>
     <div class="panel">
       <table class="table table-striped table-hover my-table">
         {#if fields_options === undefined}
@@ -74,7 +72,7 @@ function order_updated() {
           </thead>
           <tbody>
             {#if data}
-              {#each data as row}
+              {#each data as row, i}
                 <tr>
                   {#each fields_options as field}
                     <!-- <td> {JSON.stringify(field.type)} </td> -->
@@ -86,6 +84,8 @@ function order_updated() {
                       <SelectField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></SelectField>
                     {:else if field.type === "multi_select"}
                       <MultiSelectField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></MultiSelectField>
+                    {:else if field.type == "color"}
+                      <ColorField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></ColorField>
                     {:else}
                       <td>-</td>
                     {/if}
@@ -96,7 +96,6 @@ function order_updated() {
           </tbody>
         {/if}
       </table>
-
       <TableSideFilters on:filter_updated={filter_updated} {side_filters}></TableSideFilters>
     </div>
   </div>

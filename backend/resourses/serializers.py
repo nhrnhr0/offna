@@ -1,6 +1,6 @@
 
 from rest_framework import serializers
-from .models import ProductSize,ProductSizeGroup
+from .models import ProductSize,ProductSizeGroup,ProductColor
 
 
 class IdListSerializer(serializers.ListSerializer):
@@ -21,3 +21,10 @@ class ProductSizeGroupSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductSizeGroup
         fields = ('id','name','sizes_ids')
+        
+    
+class ProductColorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductColor
+        fields = '__all__'
+        

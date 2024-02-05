@@ -6,12 +6,28 @@ import TextFilter from "../filters/TextFilter.svelte";
 import { page } from "$app/stores";
 import { goto } from "$app/navigation";
 import { createEventDispatcher } from "svelte";
+import Modal from "../commen/Modal.svelte";
+import DragDropList from "../commen/DragDropList.svelte";
+
+let showModal = false;
 
 export let side_filters;
 let dispatch = createEventDispatcher();
 </script>
 
 <div class="table-settings">
+  <button on:click={() => (showModal = true)}>
+    <!-- settings fa icon -->
+    <i class="fas fa-cog"></i>
+  </button>
+
+  <Modal bind:showModal>
+    <div slot="header">
+      <h2>הגדרות</h2>
+    </div>
+    <DragDropList data={["a", "b", "c"]} removesItems={true}></DragDropList>
+  </Modal>
+
   <h4>מיונים</h4>
   <form on:submit={(e) => e.preventDefault()}>
     {#if side_filters.length === 0}

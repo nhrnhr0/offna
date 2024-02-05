@@ -2,7 +2,6 @@
 import MultiSelect from "svelte-multiselect";
 import { createEventDispatcher, onMount } from "svelte";
 import { page } from "$app/stores";
-
 export let filter;
 let dispatch = createEventDispatcher();
 let options;

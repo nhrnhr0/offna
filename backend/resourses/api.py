@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import ProductSize,ProductSizeGroup
-from .serializers import ProductSizeSerializer, ProductSizeGroupSerializer
+from .models import ProductSize,ProductSizeGroup,ProductColor
+from .serializers import ProductSizeSerializer, ProductSizeGroupSerializer,ProductColorSerializer
 
 
 def apply_filters(request, queryset, filters_fields):
@@ -42,6 +42,41 @@ class sizes_api(APIView):
             serializer.save()
             return Response(serializer.data, status=201)
         return Response(serializer.errors)
+
+class colors_api(APIView):
+    filters_fields = [
+                        {'db_key': 'name', 'url_key':'name','lookups':['icontains', '']},
+                        {'db_key': 'order', 'url_key': 'order','lookups': ['', 'lte', 'gte'], 'input_clean': int},
+    ]
+    def get(self, request):
+        colors = ProductColor.objects.all()
+        qs = apply_filters(request, colors, self.filters_fields)
+        serializer = ProductColorSerializer(qs, many=True)
+        return Response(serializer.data)
+    def post(self, request):
+        serializer = ProductColorSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors)
+
+class detail_colors_api(APIView):
+    def get(self, request, pk):
+        colors = ProductColor.objects.get(pk=pk)
+        serializer = ProductColorSerializer(colors)
+        return Response(serializer.data)
+    def put(self, request, pk):
+        colors = ProductColor.objects.get(pk=pk)
+        serializer = ProductColorSerializer(colors, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    def delete(self, request, pk):
+        colors = ProductColor.objects.get(pk=pk)
+        colors.delete()
+        return Response(status=204)
+
 
 class detail_sizes_api(APIView):
     def get(self, request, pk):

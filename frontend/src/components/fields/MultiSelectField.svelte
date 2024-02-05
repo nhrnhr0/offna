@@ -1,8 +1,15 @@
 <script>
+import * as Types from "./../../lib/types.js";
 import { onMount } from "svelte";
 import { MultiSelect } from "svelte-multiselect";
 import { createEventDispatcher } from "svelte";
+/**
+ * @type {string}
+ */
 export let key;
+/**
+ * @type {Object}
+ */
 export let record;
 export let field_options;
 let is_editing = false;

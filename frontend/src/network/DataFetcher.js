@@ -51,6 +51,14 @@ export class SizesGroupsDataFetcher extends DataFetcher{
 }
 
 
+export class ColorsDataFetcher extends DataFetcher { 
+    constructor() {
+        super();
+        this.url = '/api/colors/';
+    }
+}
+
+
 export class OptionsDataStore {
     constructor() {
         this.fetcher = null;
