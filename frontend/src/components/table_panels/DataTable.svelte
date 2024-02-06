@@ -13,6 +13,7 @@ import MultiSelectField from "../fields/MultiSelectField.svelte";
 import ColorField from "../fields/ColorField.svelte";
 import RichtextField from "../fields/RichtextField.svelte";
 import ImageField from "../fields/ImageField.svelte";
+import DatePlusDateBeforeField from "../fields/DatePlusDateBeforeField.svelte";
 /**
  * @type {any[]}
  */
@@ -92,6 +93,8 @@ function order_updated() {
                       <RichtextField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></RichtextField>
                     {:else if field.type == "image"}
                       <ImageField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></ImageField>
+                    {:else if field.type == "date_plus_datebefore"}
+                      <DatePlusDateBeforeField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></DatePlusDateBeforeField>
                     {:else}
                       <td>-</td>
                     {/if}
@@ -119,7 +122,7 @@ function order_updated() {
     grid-gap: 1rem;
   }
   .my-table {
-    table-layout: fixed;
+    // table-layout: fixed;
     width: 100%;
     :global(td),
     :global(th) {

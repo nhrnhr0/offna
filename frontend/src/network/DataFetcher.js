@@ -24,36 +24,51 @@ export class DataFetcher {
         console.log('update_record', id, record);
         const url = this.baseUrl + this.url + id + '/';
 
+        const formData = new FormData();
+        debugger;
+        for (const key in record) {
+            if (record.hasOwnProperty(key)) {
+                const value = record[key];
+                // if it's an array, we need to loop through it and append each value
+                if (Array.isArray(value)) {
+                    for (const val of value) {
+                        formData.append(key, val);
+                    }
+                } else {
+                    formData.append(key, value);
+                }
+            }
+        }
 
         const params = {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                // 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(record),
-        };
-        const response = await fetch(url, params);
-        const responseData = await response.json();
-        return responseData;
-    }
-
-    async update_image(id, file, key) {
-        const url = this.baseUrl + this.url + id + '/' + key + '/';
-
-        
-        const formData = new FormData();
-        formData.append(key, file);
-
-        const params = {
-            method: 'PUT',
             body: formData,
         };
         const response = await fetch(url, params);
         const responseData = await response.json();
-        debugger;
         return responseData;
-    
     }
+
+    // async update_image(id, file, key) {
+    //     const url = this.baseUrl + this.url + id + '/' + key + '/';
+
+        
+    //     const formData = new FormData();
+    //     formData.append(key, file);
+
+    //     const params = {
+    //         method: 'PUT',
+    //         body: formData,
+    //     };
+    //     const response = await fetch(url, params);
+    //     const responseData = await response.json();
+    //     debugger;
+    //     return responseData;
+    
+    // }
 }
 
 export class SizesDataFetcher extends DataFetcher {

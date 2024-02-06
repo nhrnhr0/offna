@@ -1,6 +1,15 @@
 <script>
 import DashBoardNav from "../../components/DashboardNav.svelte";
+import { SvelteToast } from "@zerodevx/svelte-toast";
+let svelte_toast_options = {
+  duration: 4000,
+  type: "success",
+  pausable: true,
+  dismissable: true,
+};
 </script>
+
+<SvelteToast options={svelte_toast_options} />
 
 <div class="dashboard">
   <DashBoardNav />

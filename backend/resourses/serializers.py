@@ -64,12 +64,8 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     gallery = ListSerializer(child=GalleryItemSerializer(), required=False)
-    header_image = serializers.SerializerMethodField()
-    def get_header_image(self, obj):
-        from django.conf import settings
-        
-        photo_url = obj.header_image.url
-        return settings.BASE_SERVER_URL + photo_url
+    # header_image = serializers.ImageField()
+    
     def update(self, instance, validated_data):
         print('update: ', validated_data)
         gallery = validated_data.pop('gallery', None)

@@ -4,6 +4,7 @@ import { CategoriesDataFetcher, ColorsDataFetcher, OptionsDataStore, ProductsDat
 import DataTable from "../../../components/table_panels/DataTable.svelte";
 import { page } from "$app/stores";
 import * as Types from "./../../../lib/types.js";
+import { toast } from "@zerodevx/svelte-toast";
 
 // import { layoutPrefereces } from "../../stores/layoutPrefereces";
 
@@ -110,15 +111,15 @@ onMount(async () => {
     },
     {
       key: "created_at",
-      type: "date",
+      type: "date_plus_datebefore",
       editable: false,
-      label: "נוצר בתאריך",
+      label: "נוצר",
     },
     {
       key: "updated_at",
-      type: "date",
+      type: "date_plus_datebefore",
       editable: false,
-      label: "עודכן בתאריך",
+      label: "עודכן",
     },
   ];
   dataFetcher = new ProductsDataFetcher();
@@ -141,18 +142,26 @@ async function get_data() {
 function handle_cell_updated(event) {
   let { key, value, record } = event.detail;
   let record_id = record["id"];
-  debugger;
-  if (key === "header_image") {
-    // record[key] = value;
-    dataFetcher.update_image(record_id, value, key).then(() => {
-      debugger;
-      dataFetcher.update_record(record_id, record);
-    });
-  } else {
-    dataFetcher.update_record(record_id, record);
-  }
+  let data_to_send = { id: record_id, [key]: value };
+  dataFetcher
+    .update_record(record_id, data_to_send)
+    .then((res) => {
+      let msg = (fields_options.find((f) => f.key === key)?.label || key) + " עודכן בהצלחה";
+      toast.push(msg);
 
-  // dataFetcher.update_record(record_id, record);
+      // find and replace the updated record
+      let index = data.findIndex((r) => r.id === record_id);
+      data[index] = res;
+    })
+    .catch((err) => {
+      console.error("record update failed", err);
+      toast.push("עדכון נכשל", {
+        theme: {
+          "--toastColor": "red",
+          "--toastBackground": "black",
+        },
+      });
+    });
 }
 </script>
 

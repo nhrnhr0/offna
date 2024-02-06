@@ -169,17 +169,6 @@ class detail_categories_api(APIView):
         category.delete()
         return Response(status=204)
 
-
-class detail_products_api_header_image(APIView):
-    parser_classes = [MultiPartParser, FormParser]
-    def put(self, request, pk):
-        product = Product.objects.get(pk=pk)
-        serializer = ProductImageSerializer(product, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=200)
-        return Response(serializer.errors)
-
 class products_api(APIView):
     # name,sizes,colors,category,price,description,header_image,gallery,size_group
     filter_fields = [
@@ -214,13 +203,13 @@ class detail_products_api(APIView):
         return Response(serializer.data)
     def put(self, request, pk):
         product = Product.objects.get(pk=pk)
-        # request.data['sizes'] = list(map(int, request.data.get('sizes', '').split(',')))
-        # request.data['colors'] = list(map(int,request.data.get('colors', '').split(',')))
+        # if header_image is str, then we need to pop it from request.data, it's just the url of the image and we don't need to update it
 
-        serializer = ProductSerializer(product, data=request.data)
+        serializer = ProductSerializer(product, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            res = serializer.data
+            return Response(res)
         print('errors: ', serializer.errors)
         return Response(serializer.errors)
     def delete(self, request, pk):

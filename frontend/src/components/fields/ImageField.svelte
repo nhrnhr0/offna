@@ -1,6 +1,6 @@
 <script>
 import { createEventDispatcher } from "svelte";
-
+const BACKEND_URL = "http://127.0.0.1:8000";
 export let key;
 export let record;
 export let field_options;
@@ -26,7 +26,7 @@ function handle_abort(e) {
 function handle_save(e) {
   e.stopPropagation();
   is_editing = false;
-  record[key] = new_val;
+  record[key] = file;
   debugger;
 
   dispatch("cell_updated", { key, value: file, record: record });
@@ -36,7 +36,7 @@ function handle_save(e) {
 <td on:click={handle_edit_click}>
   {#if is_editing}
     <div class="mrow">
-      <img src={preview_url} alt="" width="50px" height="50px" />
+      <img src={preview_url} alt="" width="50px" max-height="50px" />
       <input
         type="file"
         bind:value={new_val}
@@ -51,8 +51,8 @@ function handle_save(e) {
       <button class="btn btn-danger" on:click={handle_abort}>✗</button>
     </div>
   {:else if record[key]}
-    <img src={record[key]} alt="image" />
-  {:else}
+    <img src={BACKEND_URL + record[key]} alt="" width="50px" max-height="50px" />
+  {:else}1
     <div class="error">No image</div>
   {/if}
 </td>

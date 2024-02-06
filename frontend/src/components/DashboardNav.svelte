@@ -1,13 +1,13 @@
 <script>
 // links, products, categories, orders, sizes, colors
 export let links = [
-  { name: "Dashboard", link: "/dashboard" },
-  { name: "Products", link: "/dashboard/products", icon: "fas fa-box-open" },
-  { name: "Categories", link: "/dashboard/categories", icon: "fas fa-list" },
-  { name: "Orders", link: "/dashboard/orders", icon: "fas fa-shopping-cart" },
+  { name: "לוח בקרה", link: "/dashboard" },
+  { name: "מוצרים", link: "/dashboard/products", icon: "fas fa-box-open" },
+  { name: "קטגוריות", link: "/dashboard/categories", icon: "fas fa-list" },
+  { name: "הזמנות", link: "/dashboard/orders", icon: "fas fa-shopping-cart" },
   { name: "מידות", link: "/dashboard/sizes", icon: "fas fa-ruler-combined" },
   { name: "קבוצות מידות", link: "/dashboard/size_groups", icon: "fas fa-ruler-combined" },
-  { name: "Colors", link: "/dashboard/colors", icon: "fas fa-palette" },
+  { name: "צבעים", link: "/dashboard/colors", icon: "fas fa-palette" },
 ];
 </script>
 

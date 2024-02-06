@@ -15,19 +15,28 @@ function handle_edit_click() {
 
 function handle_input(event) {
   // if enter key pressed or input loses focus then stop editing
-  if (event.key === "Enter" || event.type === "blur") {
-    is_editing = false;
-  }
   if (event.key === "Escape") {
-    is_editing = false;
-    new_val = record[key];
+    handle_abort();
   }
 
   //   if the input is diffrent, then update the record and send a signal to the parent
   if (new_val !== record[key] && is_editing === false) {
-    record[key] = new_val;
-    dispatch("cell_updated", { key, value: new_val, record: record });
+    // record[key] = new_val;
+    // dispatch("cell_updated", { key, value: new_val, record: record });
+    handle_save();
   }
+}
+
+function handle_save(e) {
+  e.stopPropagation();
+  is_editing = false;
+  record[key] = new_val;
+  dispatch("cell_updated", { key, value: new_val, record: record });
+}
+function handle_abort(e) {
+  e.stopPropagation();
+  is_editing = false;
+  new_val = record[key];
 }
 </script>
 
@@ -35,8 +44,13 @@ function handle_input(event) {
   <div class="number-field">
     {#if is_editing}
       <textarea bind:value={new_val} on:keypress={handle_input} on:blur={handle_input} autofocus />
+
+      <button class="btn btn-success" on:click={handle_save}>✓</button>
+      <button class="btn btn-danger" on:click={handle_abort}>✗</button>
     {:else}
-      {record[key] || "ריק"}
+      <div style="white-space: pre-line;text-align: right;">
+        {record[key]}
+      </div>
     {/if}
   </div>
 </td>
