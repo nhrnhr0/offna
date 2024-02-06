@@ -179,8 +179,8 @@ class products_api(APIView):
                         {'db_key': 'sizes', 'url_key':'sizes','lookups':['in'], 'input_clean': (lambda x: x.split(','))},
                         {'db_key': 'colors', 'url_key':'colors','lookups':['in'], 'input_clean': (lambda x: x.split(','))},
                         {'db_key': 'description', 'url_key':'description','lookups':['icontains', '']},
-                        {'db_key': 'created_at', 'url_key':'created_at','lookups':['', 'lte', 'gte'], 'input_clean': (lambda x: x.split(','))},
-                        {'db_key': 'updated_at', 'url_key':'updated_at','lookups':['', 'lte', 'gte'], 'input_clean': (lambda x: x.split(','))},
+                        {'db_key': 'created_at', 'url_key':'created_at','lookups':['lte', 'gte']},
+                        {'db_key': 'updated_at', 'url_key':'updated_at','lookups':['lte', 'gte']},
     ]
     
     def get(self, request):

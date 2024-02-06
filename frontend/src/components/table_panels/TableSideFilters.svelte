@@ -8,6 +8,7 @@ import { goto } from "$app/navigation";
 import { createEventDispatcher } from "svelte";
 import Modal from "../commen/Modal.svelte";
 import DragDropList from "../commen/DragDropList.svelte";
+import DateFilter from "../filters/DateFilter.svelte";
 
 let showModal = false;
 
@@ -44,6 +45,8 @@ let dispatch = createEventDispatcher();
           <NumberFilter {filter}></NumberFilter>
         {:else if filter.type === "multiselect"}
           <MultiSelectFilter {filter}></MultiSelectFilter>
+        {:else if filter.type === "date"}
+          <DateFilter {filter}></DateFilter>
         {:else}
           <p>Unknown filter type</p>
         {/if}

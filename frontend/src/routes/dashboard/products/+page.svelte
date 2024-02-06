@@ -188,6 +188,33 @@ function handle_cell_updated(event) {
       type: "text",
       label: "שם",
     },
+    {
+      query_param_key: "category",
+      type: "multiselect",
+      label: "קטגוריה",
+      options: category_options,
+    },
+    {
+      query_param_key: "size_group",
+      type: "multiselect",
+      label: "קבוצת מידות",
+      options: size_group_options,
+    },
+    {
+      query_param_key: "price",
+      type: "number",
+      label: "מחיר",
+    },
+    {
+      query_param_key: "created_at",
+      type: "date",
+      label: "נוצר",
+    },
+    {
+      query_param_key: "updated_at",
+      type: "date",
+      label: "עודכן",
+    },
   ]}
   {fields_options}
 />
