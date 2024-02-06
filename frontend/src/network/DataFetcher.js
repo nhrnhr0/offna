@@ -23,16 +23,36 @@ export class DataFetcher {
     async update_record(id, record) {
         console.log('update_record', id, record);
         const url = this.baseUrl + this.url + id + '/';
+
+
         const params = {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(record)
+            body: JSON.stringify(record),
         };
         const response = await fetch(url, params);
         const responseData = await response.json();
         return responseData;
+    }
+
+    async update_image(id, file, key) {
+        const url = this.baseUrl + this.url + id + '/' + key + '/';
+
+        
+        const formData = new FormData();
+        formData.append(key, file);
+
+        const params = {
+            method: 'PUT',
+            body: formData,
+        };
+        const response = await fetch(url, params);
+        const responseData = await response.json();
+        debugger;
+        return responseData;
+    
     }
 }
 
@@ -42,6 +62,14 @@ export class SizesDataFetcher extends DataFetcher {
         this.url = '/api/sizes/';
     }
 }
+
+export class CategoriesDataFetcher extends DataFetcher {
+    constructor() {
+        super();
+        this.url = '/api/categories/';
+    }
+}
+
 
 export class SizesGroupsDataFetcher extends DataFetcher{
     constructor() {
@@ -58,12 +86,40 @@ export class ColorsDataFetcher extends DataFetcher {
     }
 }
 
+export class ProductsDataFetcher extends DataFetcher {
+    constructor() {
+        super();
+        this.url = '/api/products/';
+    }
+}
 
 export class OptionsDataStore {
-    constructor() {
-        this.fetcher = null;
-        this.options = [];
+    id_field = 'id';
+    label_field = 'name';
+    /**
+     * @type {DataFetcher | null}
+     */
+    fetcher = null;
+    /**
+     * @type {Array<Object>}
+     */
+    options = [];
 
+    ids_labels_array = [];
+
+    /**
+     * 
+     * @param {string} id_field 
+     * @param {string} label_field 
+     */
+    constructor(id_field, label_field, fetcher=null) {
+        if (id_field) {
+        this.id_field = id_field;
+        }
+        if(label_field) {
+        this.label_field = label_field;
+        }
+        this.fetcher = fetcher;
     }
     // load_options
     async load_options() {
@@ -72,11 +128,19 @@ export class OptionsDataStore {
         }
         const data = await this.fetcher.getAll();
         this.options = data;
+
+        this.ids_labels_array = this.options.map((option) => {
+            return {
+                id: option[this.id_field],
+                label: option[this.label_field]
+            };
+        });
+        return this;
     }
     // set_fetcher
     /**
      * @param {DataFetcher} fetcher
-     * @returns {void}
+     * @returns {OptionsDataStore}
      * @throws {Error}
      * @memberof OptionsDataStore
      * @description
@@ -89,20 +153,19 @@ export class OptionsDataStore {
      */
     set_fetcher(fetcher) {
         this.fetcher = fetcher;
+        return this;
     }
     
 
-    get_options() {
+    get_raw_data() {
         console.log('get_options', this.options);
         return this.options;
     }
 
-    get_option(id) {
-        return this.options.find(option => option.id === id);
+    get_options() {
+        return this.ids_labels_array;
     }
-    get_option_name(id) {
-        console.log('get_option_name', id);
-        const option = this.get_option(id);
-        return option.name;
-    }
+
+
+
 }

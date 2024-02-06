@@ -18,9 +18,7 @@ let dispatch = createEventDispatcher();
 /**
  * @type {{id: number, label: string}[]}
  */
-let optinos = field_options.options.map((option) => {
-  return { id: option.id, label: option.size };
-});
+let optinos = field_options.options;
 /**
  * @type {number[] | undefined}
  */

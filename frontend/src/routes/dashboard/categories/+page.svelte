@@ -1,11 +1,13 @@
 <script>
 import { onMount } from "svelte";
-import { SizesDataFetcher, SizesGroupsDataFetcher, OptionsDataStore } from "../../../network/DataFetcher";
+import { CategoriesDataFetcher } from "../../../network/DataFetcher";
 import DataTable from "../../../components/table_panels/DataTable.svelte";
 import { page } from "$app/stores";
 import * as Types from "./../../../lib/types.js";
 
 // import { layoutPrefereces } from "../../stores/layoutPrefereces";
+
+let error = undefined;
 
 /**
  * @type {DataFetcher}
@@ -24,11 +26,6 @@ let sizes_options;
  */
 let fields_options;
 onMount(async () => {
-  let sizes_options_fetcher = new OptionsDataStore("id", "size");
-  sizes_options_fetcher.set_fetcher(new SizesDataFetcher());
-  await sizes_options_fetcher.load_options();
-  sizes_options = sizes_options_fetcher.get_options();
-  console.log("size_group_options", sizes_options);
   fields_options = [
     {
       key: "id",
@@ -42,36 +39,44 @@ onMount(async () => {
       editable: true,
       label: "שם",
     },
-    {
-      key: "sizes_ids",
-      type: "multi_select",
-      editable: true,
-      label: "מידות",
-      options: sizes_options,
-    },
   ];
-  dataFetcher = new SizesGroupsDataFetcher();
+  dataFetcher = new CategoriesDataFetcher();
   await get_data();
 });
 
 async function get_data() {
   console.log("get_data");
   let params = $page.url.searchParams;
-  data = await dataFetcher.getData(params);
+  try {
+    data = await dataFetcher.getData(params);
+  } catch (_error) {
+    error = _error;
+  }
 }
 
 function handle_cell_updated(event) {
   let { key, value, record } = event.detail;
   let record_id = record["id"];
-  debugger;
   dataFetcher.update_record(record_id, record);
 }
 </script>
 
+{#if error !== undefined}
+  <div class="alert alert-danger" role="alert">
+    {error.message}
+    <button
+      class="btn btn-primary"
+      on:click={() => {
+        location.reload();
+      }}>רענן</button
+    >
+  </div>
+  <!-- refresh the page button -->
+{/if}
 <DataTable
   on:cell_updated={handle_cell_updated}
   on:filter_updated={get_data}
-  title="מידות"
+  title="קטגוריות"
   {data}
   side_filters={[
     {

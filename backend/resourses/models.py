@@ -43,10 +43,14 @@ class Product(models.Model):
     sizes = models.ManyToManyField(ProductSize, blank=True)
     colors = models.ManyToManyField(ProductColor, blank=True)
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE)
-    price = models.FloatField(default=0)
+    price = models.FloatField(default=0, blank=True)
     description = models.TextField(blank=True)
+    header_image = models.ImageField(upload_to='images/', blank=True, null=True)
     gallery = models.ManyToManyField(GalleryImage, blank=True)
     size_group = models.ForeignKey(ProductSizeGroup, on_delete=models.CASCADE)
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     
     def __str__(self):

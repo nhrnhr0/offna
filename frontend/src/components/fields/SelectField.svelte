@@ -6,9 +6,6 @@ let dispatch = createEventDispatcher();
 
 export let key;
 export let record;
-/**
- * @type {{type: string; editable: boolean; sortable: boolean; filterable: boolean; label:string; options_fetcher?: OptionsDataStore;}}
- */
 export let field_options;
 let new_val = record[key];
 let is_editing = false;
@@ -30,7 +27,7 @@ function handle_save(e) {
 function handle_abort(e) {
   e.stopPropagation();
   is_editing = false;
-  new_val = id;
+  new_val = record[key];
 }
 </script>
 
@@ -41,7 +38,7 @@ function handle_abort(e) {
         <div style="display: flex; align-items: center;">
           <select bind:value={new_val} class="form-select">
             {#each field_options.options as option}
-              <option value={option.id}>{option.name}</option>
+              <option value={option.id}>{option.label}</option>
             {/each}
           </select>
           <!-- approve  / reject -->
@@ -49,7 +46,7 @@ function handle_abort(e) {
           <button class="btn btn-danger" on:click={handle_abort}>✗</button>
         </div>
       {:else if field_options && field_options.options && field_options.options.length > 0}
-        {field_options.options.find((option) => option.id === record[key])?.name ?? "ריק"}
+        {field_options.options.find((option) => option.id === record[key])?.label ?? "ריק"}
       {/if}
     </div>
   {:else}

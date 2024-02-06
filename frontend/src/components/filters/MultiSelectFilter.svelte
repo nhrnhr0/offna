@@ -9,9 +9,7 @@ let filter_value = [];
 let is_ready = false;
 $: {
   if (filter && filter.options && filter.options.length > 0) {
-    options = filter.options.map((option) => {
-      return { id: option.id, label: option.name };
-    });
+    options = filter.options;
     is_ready = true;
   }
 }

@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .models import ProductSize,ProductSizeGroup,ProductColor
-from .serializers import ProductSizeSerializer, ProductSizeGroupSerializer,ProductColorSerializer
+from .models import ProductSize,ProductSizeGroup,ProductColor,ProductCategory,Product
+from .serializers import ProductSizeSerializer, ProductSizeGroupSerializer,ProductColorSerializer,ProductCategorySerializer, ProductSerializer,ProductImageSerializer
+from rest_framework.parsers import MultiPartParser, FormParser
 
 
 def apply_filters(request, queryset, filters_fields):
@@ -129,4 +130,100 @@ class detail_sizes_groups_api(APIView):
     def delete(self, request, pk):
         sizes_group = ProductSizeGroup.objects.get(pk=pk)
         sizes_group.delete()
+        return Response(status=204)
+
+
+class categories_api(APIView):
+    filter_fields = [
+                        {'db_key': 'name', 'url_key':'name','lookups':['icontains', '']},
+    ]
+    
+    def get(self, request):
+        categories = ProductCategory.objects.all()
+        qs = apply_filters(request, categories, self.filter_fields)
+        serializer = ProductCategorySerializer(qs, many=True)
+        return Response(serializer.data)
+    
+    def post(self, request):
+        serializer = ProductCategorySerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors)
+    
+
+class detail_categories_api(APIView):
+    def get(self, request, pk):
+        category = ProductCategory.objects.get(pk=pk)
+        serializer = ProductCategorySerializer(category)
+        return Response(serializer.data)
+    def put(self, request, pk):
+        category = ProductCategory.objects.get(pk=pk)
+        serializer = ProductCategorySerializer(category, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
+    def delete(self, request, pk):
+        category = ProductCategory.objects.get(pk=pk)
+        category.delete()
+        return Response(status=204)
+
+
+class detail_products_api_header_image(APIView):
+    parser_classes = [MultiPartParser, FormParser]
+    def put(self, request, pk):
+        product = Product.objects.get(pk=pk)
+        serializer = ProductImageSerializer(product, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=200)
+        return Response(serializer.errors)
+
+class products_api(APIView):
+    # name,sizes,colors,category,price,description,header_image,gallery,size_group
+    filter_fields = [
+                        {'db_key': 'name', 'url_key':'name','lookups':['icontains', '']},
+                        {'db_key': 'category', 'url_key':'category','lookups':['in'], 'input_clean': (lambda x: x.split(','))},
+                        {'db_key': 'price', 'url_key':'price','lookups':['', 'lte', 'gte'], 'input_clean': float},
+                        {'db_key': 'size_group', 'url_key':'size_group','lookups':['in'], 'input_clean': (lambda x: x.split(','))},
+                        {'db_key': 'sizes', 'url_key':'sizes','lookups':['in'], 'input_clean': (lambda x: x.split(','))},
+                        {'db_key': 'colors', 'url_key':'colors','lookups':['in'], 'input_clean': (lambda x: x.split(','))},
+                        {'db_key': 'description', 'url_key':'description','lookups':['icontains', '']},
+                        {'db_key': 'created_at', 'url_key':'created_at','lookups':['', 'lte', 'gte'], 'input_clean': (lambda x: x.split(','))},
+                        {'db_key': 'updated_at', 'url_key':'updated_at','lookups':['', 'lte', 'gte'], 'input_clean': (lambda x: x.split(','))},
+    ]
+    
+    def get(self, request):
+        products = Product.objects.all()
+        qs = apply_filters(request, products, self.filter_fields)
+        serializer = ProductSerializer(qs, many=True)
+        return Response(serializer.data)
+    def post(self, request):
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=201)
+        return Response(serializer.errors)
+    
+class detail_products_api(APIView):
+    # parser_classes = [MultiPartParser, FormParser]
+    def get(self, request, pk):
+        product = Product.objects.get(pk=pk)
+        serializer = ProductSerializer(product)
+        return Response(serializer.data)
+    def put(self, request, pk):
+        product = Product.objects.get(pk=pk)
+        # request.data['sizes'] = list(map(int, request.data.get('sizes', '').split(',')))
+        # request.data['colors'] = list(map(int,request.data.get('colors', '').split(',')))
+
+        serializer = ProductSerializer(product, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        print('errors: ', serializer.errors)
+        return Response(serializer.errors)
+    def delete(self, request, pk):
+        product = Product.objects.get(pk=pk)
+        product.delete()
         return Response(status=204)

@@ -11,6 +11,8 @@ import TableSideFilters from "./TableSideFilters.svelte";
 import { browser } from "$app/environment";
 import MultiSelectField from "../fields/MultiSelectField.svelte";
 import ColorField from "../fields/ColorField.svelte";
+import RichtextField from "../fields/RichtextField.svelte";
+import ImageField from "../fields/ImageField.svelte";
 /**
  * @type {any[]}
  */
@@ -86,6 +88,10 @@ function order_updated() {
                       <MultiSelectField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></MultiSelectField>
                     {:else if field.type == "color"}
                       <ColorField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></ColorField>
+                    {:else if field.type == "richtext"}
+                      <RichtextField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></RichtextField>
+                    {:else if field.type == "image"}
+                      <ImageField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></ImageField>
                     {:else}
                       <td>-</td>
                     {/if}

@@ -29,6 +29,7 @@ onMount(async () => {
   await size_group_option_fetcher.load_options();
   size_group_options = size_group_option_fetcher.get_options();
   console.log("size_group_options", size_group_options);
+  debugger;
   fields_options = [
     {
       key: "id",
