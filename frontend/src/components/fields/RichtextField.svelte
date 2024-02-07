@@ -44,9 +44,12 @@ function handle_abort(e) {
   <div class="number-field">
     {#if is_editing}
       <textarea bind:value={new_val} on:keypress={handle_input} on:blur={handle_input} autofocus />
-
-      <button class="btn btn-success" on:click={handle_save}>✓</button>
-      <button class="btn btn-danger" on:click={handle_abort}>✗</button>
+      <div class="row">
+        <div class="col">
+          <button class="btn btn-success" on:click={handle_save}>✓</button>
+          <button class="btn btn-danger" on:click={handle_abort}>✗</button>
+        </div>
+      </div>
     {:else}
       <div style="white-space: pre-line;text-align: right;">
         {record[key]}

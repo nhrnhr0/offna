@@ -1,10 +1,11 @@
 <script>
-import { onMount } from "svelte";
+import { onDestroy, onMount } from "svelte";
 import { CategoriesDataFetcher, ColorsDataFetcher, OptionsDataStore, ProductsDataFetcher, SizesDataFetcher, SizesGroupsDataFetcher } from "../../../network/DataFetcher";
 import DataTable from "../../../components/table_panels/DataTable.svelte";
 import { page } from "$app/stores";
 import * as Types from "./../../../lib/types.js";
 import { toast } from "@zerodevx/svelte-toast";
+import { userPreferenceProductsTable } from "../../../stores/UserPreference";
 
 // import { layoutPrefereces } from "../../stores/layoutPrefereces";
 
@@ -27,12 +28,18 @@ let sizes_options;
 let colors_options;
 let category_options;
 let size_group_options;
+
 /**
  * @type {Types.FieldsOption[]}
  */
 let fields_options;
+/**
+ * @type {Types.FieldsOption[] | any[]}
+ */
+let display_fields_options = [];
 onMount(async () => {
   //id,name,sizes,colors,category,price,description,header_image,gallery,size_group,created_at,updated_at
+
   let res = await Promise.all([
     new OptionsDataStore("id", "size").set_fetcher(new SizesDataFetcher()).load_options(),
     new OptionsDataStore("id", "name").set_fetcher(new ColorsDataFetcher()).load_options(),
@@ -43,7 +50,6 @@ onMount(async () => {
   colors_options = res[1].get_options();
   category_options = res[2].get_options();
   size_group_options = res[3].get_options();
-  debugger;
   fields_options = [
     {
       key: "id",
@@ -180,6 +186,7 @@ function handle_cell_updated(event) {
 <DataTable
   on:cell_updated={handle_cell_updated}
   on:filter_updated={get_data}
+  bind:display_fields_options={$userPreferenceProductsTable}
   title="מוצרים"
   {data}
   side_filters={[

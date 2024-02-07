@@ -4,7 +4,7 @@ import { ColorsDataFetcher } from "../../../network/DataFetcher";
 import DataTable from "../../../components/table_panels/DataTable.svelte";
 import { page } from "$app/stores";
 import * as Types from "./../../../lib/types.js";
-
+import { userPreferenceColorsTable } from "../../../stores/UserPreference";
 // import { layoutPrefereces } from "../../stores/layoutPrefereces";
 
 /**
@@ -71,6 +71,7 @@ function handle_cell_updated(event) {
 <DataTable
   on:cell_updated={handle_cell_updated}
   on:filter_updated={get_data}
+  bind:display_fields_options={$userPreferenceColorsTable}
   title="צבעים"
   {data}
   side_filters={[

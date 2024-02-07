@@ -4,7 +4,7 @@ import { CategoriesDataFetcher } from "../../../network/DataFetcher";
 import DataTable from "../../../components/table_panels/DataTable.svelte";
 import { page } from "$app/stores";
 import * as Types from "./../../../lib/types.js";
-
+import { userPreferenceCategoriesTable } from "../../../stores/UserPreference";
 // import { layoutPrefereces } from "../../stores/layoutPrefereces";
 
 let error = undefined;
@@ -76,6 +76,7 @@ function handle_cell_updated(event) {
 <DataTable
   on:cell_updated={handle_cell_updated}
   on:filter_updated={get_data}
+  bind:display_fields_options={$userPreferenceCategoriesTable}
   title="קטגוריות"
   {data}
   side_filters={[

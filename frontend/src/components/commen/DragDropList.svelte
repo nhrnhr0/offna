@@ -1,9 +1,9 @@
 <script>
 import { flip } from "svelte/animate";
-
+import { createEventDispatcher } from "svelte";
 export let data = [];
 export let removesItems = false;
-
+let dispatch = createEventDispatcher();
 let ghost;
 let grabbed;
 
@@ -66,6 +66,7 @@ function release(ev) {
 }
 
 function removeDatum(index) {
+  dispatch("remove", { index });
   data = [...data.slice(0, index), ...data.slice(index + 1)];
 }
 </script>
@@ -153,13 +154,14 @@ function removeDatum(index) {
         </div>
 
         <div class="content">
-          {#if datum.html}
+          <!-- {#if datum.html}
             {@html datum.html}
           {:else if datum.text}
             <p>{datum.text}</p>
           {:else}
             <p>{datum}</p>
-          {/if}
+          {/if} -->
+          <slot name="item" {...datum} {i} />
         </div>
 
         <div class="buttons delete">

@@ -40,10 +40,13 @@ function handle_abort(e) {
 
 <td on:click={() => (is_editing = true)}>
   {#if is_editing}
-    <div class="mrow">
-      <MultiSelect bind:selected={new_value} options={optinos}></MultiSelect>
-      <button class="btn btn-success" on:click={handle_save}>✓</button>
-      <button class="btn btn-danger" on:click={handle_abort}>✗</button>
+    <div class="row">
+      <div class="col">
+        <MultiSelect bind:selected={new_value} options={optinos}></MultiSelect>
+
+        <button class="btn btn-success" on:click={handle_save}>✓</button>
+        <button class="btn btn-danger" on:click={handle_abort}>✗</button>
+      </div>
     </div>
   {:else}
     {new_value?.map((value) => value.label).join(", ")}
@@ -51,8 +54,4 @@ function handle_abort(e) {
 </td>
 
 <style lang="scss">
-.mrow {
-  display: flex;
-  align-items: center;
-}
 </style>

@@ -1,4 +1,6 @@
 <script>
+import * as Types from "./../../lib/types.js";
+
 import TextField from "../fields/TextField.svelte";
 import MultiSelectFilter from "../filters/MultiSelectFilter.svelte";
 import NumberFilter from "../filters/NumberFilter.svelte";
@@ -9,10 +11,22 @@ import { createEventDispatcher } from "svelte";
 import Modal from "../commen/Modal.svelte";
 import DragDropList from "../commen/DragDropList.svelte";
 import DateFilter from "../filters/DateFilter.svelte";
+import { writable } from "svelte/store";
 
 let showModal = false;
 
 export let side_filters;
+/**
+ * @type {Types.FieldsOption[] | undefined}
+ */
+export let fields_options;
+/**
+ * @type {Types.FieldsOption[] | undefined}
+ */
+export let display_fields_options;
+// $: {
+//   $userPreferenceProductsTable = display_fields_options;
+// }
 let dispatch = createEventDispatcher();
 </script>
 
@@ -26,7 +40,85 @@ let dispatch = createEventDispatcher();
     <div slot="header">
       <h2>הגדרות</h2>
     </div>
-    <DragDropList data={["a", "b", "c"]} removesItems={true}></DragDropList>
+    <!-- card -->
+    <!-- list of all the fields and to the side anoher list of all the display fields -->
+    <div class="modal-content">
+      <div class="card">
+        <div class="card-header">
+          <h3>הצגת שדות</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <div class="col">
+              <div class="area-title">
+                <div class="title">
+                  שדות להצגה
+                  <a
+                    href="#"
+                    on:click={(e) => {
+                      e.preventDefault();
+                      if (display_fields_options.length > 1) {
+                        display_fields_options = [display_fields_options[0]];
+                      }
+                    }}>נקה</a
+                  >
+                </div>
+              </div>
+              {#if display_fields_options !== undefined}
+                <DragDropList
+                  bind:data={display_fields_options}
+                  removesItems={true}
+                  on:remove={(e) => {
+                    // let idx = e.detail.index;
+                    // if (display_fields_options.length > 1) {
+                    //   display_fields_options = display_fields_options.filter((_, i) => i !== idx);
+                    // }
+                  }}
+                >
+                  <div slot="item" let:label>
+                    <div class="list-group">
+                      {label}
+                    </div>
+                  </div>
+                </DragDropList>
+              {/if}
+            </div>
+            <div class="col">
+              <div class="area-title">
+                <div class="title">
+                  כל השדות
+                  <a
+                    href="#"
+                    on:click={(e) => {
+                      e.preventDefault();
+                      display_fields_options = fields_options;
+                    }}>הצג הכל</a
+                  >
+                </div>
+              </div>
+              <ul class="list-group">
+                {#if fields_options}
+                  {#each fields_options as field}
+                    <button
+                      class:selected={display_fields_options.find((item) => item.label === field.label) !== undefined}
+                      on:click={() => {
+                        if (display_fields_options.find((item) => item.label === field.label) !== undefined) {
+                          display_fields_options = display_fields_options.filter((item) => item.label !== field.label);
+                        } else {
+                          display_fields_options = [...display_fields_options, field];
+                        }
+                      }}
+                    >
+                      {field.label}
+                    </button>
+                  {/each}
+                {/if}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </Modal>
 
   <h4>מיונים</h4>
@@ -35,8 +127,6 @@ let dispatch = createEventDispatcher();
       <p>No filters</p>
     {/if}
     {#each side_filters as filter}
-      <!-- <div class="form-card"> -->
-      <!-- <label for={filter.query_param_key}>{filter.label}</label> -->
       <fieldset class="form-card">
         <legend>{filter.label}</legend>
         {#if filter.type === "text"}
@@ -66,6 +156,28 @@ let dispatch = createEventDispatcher();
 </div>
 
 <style lang="scss">
+.modal-content {
+  min-width: 700px;
+  .list-group {
+    list-style: none;
+    padding: 0;
+    button {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      cursor: pointer;
+      text-align: right;
+      &:hover {
+        background-color: #f0f0f0;
+      }
+
+      &.selected {
+        background-color: #d8d7d7;
+      }
+    }
+  }
+}
 .table-settings {
   // direction: rtl;
   padding: 1rem;

@@ -35,18 +35,17 @@ function handle_save(e) {
 
 <td on:click={handle_edit_click}>
   {#if is_editing}
+    <img src={preview_url} alt="" width="50px" max-height="50px" />
+    <input
+      type="file"
+      bind:value={new_val}
+      on:change={(e) => {
+        file = e.target.files[0];
+        preview_url = URL.createObjectURL(file);
+      }}
+    />
+    <!-- image preview -->
     <div class="mrow">
-      <img src={preview_url} alt="" width="50px" max-height="50px" />
-      <input
-        type="file"
-        bind:value={new_val}
-        on:change={(e) => {
-          file = e.target.files[0];
-          preview_url = URL.createObjectURL(file);
-        }}
-      />
-      <!-- image preview -->
-
       <button class="btn btn-success" on:click={handle_save}>✓</button>
       <button class="btn btn-danger" on:click={handle_abort}>✗</button>
     </div>

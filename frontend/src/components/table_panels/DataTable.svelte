@@ -14,6 +14,7 @@ import ColorField from "../fields/ColorField.svelte";
 import RichtextField from "../fields/RichtextField.svelte";
 import ImageField from "../fields/ImageField.svelte";
 import DatePlusDateBeforeField from "../fields/DatePlusDateBeforeField.svelte";
+
 /**
  * @type {any[]}
  */
@@ -29,7 +30,14 @@ export let title;
 export let fields_options;
 
 export let side_filters;
+/**
+ * @type {writable<Types.FieldsOption[]> | undefined}
+ */
+export let display_fields_options;
+
 let dispatch = createEventDispatcher();
+
+onMount;
 
 function handle_cell_updated(event) {
   let { key, value, record } = event.detail;
@@ -61,12 +69,12 @@ function order_updated() {
               <td></td>
             </tr>
           </tbody>
-        {:else if fields_options.length === 0}
+        {:else if display_fields_options.length === 0}
           <p>fields_options is empty</p>
         {:else}
           <thead>
             <tr>
-              {#each fields_options as field}
+              {#each display_fields_options as field}
                 <th>
                   {field.label}
                 </th>
@@ -77,7 +85,7 @@ function order_updated() {
             {#if data}
               {#each data as row, i}
                 <tr>
-                  {#each fields_options as field}
+                  {#each display_fields_options as field}
                     <!-- <td> {JSON.stringify(field.type)} </td> -->
                     {#if field.type === "number"}
                       <NumberField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></NumberField>
@@ -105,7 +113,7 @@ function order_updated() {
           </tbody>
         {/if}
       </table>
-      <TableSideFilters on:filter_updated={filter_updated} {side_filters}></TableSideFilters>
+      <TableSideFilters on:filter_updated={filter_updated} {side_filters} {fields_options} bind:display_fields_options></TableSideFilters>
     </div>
   </div>
 </div>
