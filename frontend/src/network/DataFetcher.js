@@ -1,8 +1,9 @@
 import { writable } from 'svelte/store';
 import { get } from 'svelte/store';
+import { BACKEND_URL } from '$lib/config';
 export class DataFetcher {
     constructor() {
-        this.baseUrl = 'http://127.0.0.1:8000';
+        this.baseUrl = BACKEND_URL;
         this.url = '';
     }
 

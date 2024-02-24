@@ -38,7 +38,7 @@ let dispatch = createEventDispatcher();
 
   <Modal bind:showModal>
     <div slot="header">
-      <h2>הגדרות</h2>
+      <h2 class="modal-title">הגדרות</h2>
     </div>
     <!-- card -->
     <!-- list of all the fields and to the side anoher list of all the display fields -->
@@ -156,6 +156,26 @@ let dispatch = createEventDispatcher();
 </div>
 
 <style lang="scss">
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.modal-title {
+  display: flex;
+}
+.title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  a {
+    color: #007bff;
+    text-decoration: none;
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
 .modal-content {
   min-width: 700px;
   .list-group {

@@ -7,6 +7,5 @@
 
 <style lang="scss">
 .content {
-  border: 1px solid red;
 }
 </style>

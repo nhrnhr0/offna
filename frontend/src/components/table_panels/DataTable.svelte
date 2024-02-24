@@ -14,7 +14,12 @@ import ColorField from "../fields/ColorField.svelte";
 import RichtextField from "../fields/RichtextField.svelte";
 import ImageField from "../fields/ImageField.svelte";
 import DatePlusDateBeforeField from "../fields/DatePlusDateBeforeField.svelte";
+import ActionsField from "../fields/ActionsField.svelte";
 
+/**
+ * @type {string}
+ */
+export let craete_new_path;
 /**
  * @type {any[]}
  */
@@ -54,7 +59,12 @@ function order_updated() {
 <div class="data-table">
   <!-- Your table content goes here -->
   <div class="">
-    <h2 class="title">{title}</h2>
+    <h2 class="title">
+      {title}
+      {#if craete_new_path}
+        <a href={craete_new_path} class="btn btn-primary">הוסף</a>
+      {/if}
+    </h2>
     <!-- ordering  options -->
     <div class="panel">
       <table class="table table-striped table-hover my-table">
@@ -103,6 +113,8 @@ function order_updated() {
                       <ImageField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></ImageField>
                     {:else if field.type == "date_plus_datebefore"}
                       <DatePlusDateBeforeField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></DatePlusDateBeforeField>
+                    {:else if field.type == "action"}
+                      <ActionsField key={field.key} record={row} field_options={field} on:cell_updated={handle_cell_updated}></ActionsField>
                     {:else}
                       <td>-</td>
                     {/if}

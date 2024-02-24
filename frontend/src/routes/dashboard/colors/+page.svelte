@@ -49,6 +49,24 @@ onMount(async () => {
       editable: true,
       label: "סדר",
     },
+    {
+      key: "id",
+      type: "action",
+      editable: false,
+      label: "פעולות",
+      options: [
+        {
+          type: "edit",
+          label: "ערוך",
+          path: "/dashboard/colors/{id}/edit",
+        },
+        {
+          type: "delete",
+          label: "מחק",
+          path: "/dashboard/colors/{id}/delete",
+        },
+      ],
+    },
   ];
   dataFetcher = new ColorsDataFetcher();
   await get_data();
@@ -73,6 +91,7 @@ function handle_cell_updated(event) {
   on:filter_updated={get_data}
   bind:display_fields_options={$userPreferenceColorsTable}
   title="צבעים"
+  craete_new_path="/dashboard/colors/new"
   {data}
   side_filters={[
     {

@@ -17,8 +17,8 @@ class ProductSizeGroup(models.Model):
         return self.name
 
 class ProductColor(models.Model):
-    name = models.CharField(max_length=100, blank=True)
-    color = models.CharField(max_length=100, blank=True)
+    name = models.CharField(max_length=100, unique=True)
+    color = models.CharField(max_length=100, unique=True)
     order = models.IntegerField(default=0)
     class Meta:
         ordering = ['order']

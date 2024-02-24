@@ -1,6 +1,6 @@
 <script>
 import { createEventDispatcher } from "svelte";
-const BACKEND_URL = "http://127.0.0.1:8000";
+import { BACKEND_URL } from "../../lib/config.js";
 export let key;
 export let record;
 export let field_options;
